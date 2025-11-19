@@ -1,0 +1,39 @@
+name: Website Info Lookup
+
+# This workflow allows you to manually run a domain lookup
+# or automatically run it when issues are created with suspicious URLs
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Website URL to investigate'
+        required: true
+        type: string
+  issues:
+    types: [opened]
+
+jobs:
+  lookup-website:
+    runs-on: ubuntu-latest
+    name: Investigate Suspicious Website
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Lookup Website Information
+        uses: hazzydevelopment/website_infoaction@main
+        with:
+          url: ${{ github.event.inputs.url || 'example.com' }}
+      
+      - name: Post results
+        run: |
+          echo "Website lookup complete!"
+          echo "Check the action logs above for domain registration details."
+          echo "This information can help identify:"
+          echo "  - Domain owner"
+          echo "  - Registrar"
+          echo "  - Country of registration"
+          echo "  - Registration date"
+          echo "  - Contact information (if available)"
